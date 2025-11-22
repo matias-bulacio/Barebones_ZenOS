@@ -5,7 +5,8 @@
 #if defined(__linux__)
 #error "Use a cross-compiler!"
 #endif
-#if !defined(__i386__) #error "Need an ix86 compiler"
+#if !defined(__i386__)
+#error "Need an ix86 compiler"
 #endif
 
 enum vga_color {
