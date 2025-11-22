@@ -1,7 +1,7 @@
 ENTRY(_start)
 
 SECTIONS {
-	. = 2M /* Start offset*/
+	. = 2M; /* Start offset*/
 
 	.text BLOCK(4K) : ALIGN(4K) {
 		*(.multiboot) /* Start with multiboot to get recognized*/
