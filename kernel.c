@@ -90,5 +90,6 @@ term_write_str(const char *str) {
 void
 k_main() {
 	term_init();
+	term_clear();
 	term_write_str("Hello world!\n");
 }
