@@ -189,4 +189,7 @@ k_main() {
 	term_write_str("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC\n");
 	term_write_str("DDDD\n");
 
+	term_cursor = term_cursor_pos(9, VGA_HEIGHT-3);
+	term_putchar('\t');
+
 }
