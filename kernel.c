@@ -147,7 +147,11 @@ term_putchar(char c) {
 	}
 
 	if(c == '\t') {
+		size_t old_term_cursor = term_cursor;
 		term_cursor += TERM_TAB_WIDTH - term_cursor % TERM_TAB_WIDTH;
+		for(size_t i = old_term_cursor; i < term_cursor && i < VGA_WIDTH*VGA_HEIGHT; i++){
+			term_buff[i] = vga_entry(' ', term_color);
+		}
 		term_scroll_if_needed(1, VGA_LAST_LINE);
 		return;
 	}
