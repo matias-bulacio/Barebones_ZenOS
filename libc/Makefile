@@ -1,13 +1,13 @@
-DEFAULT_HOST!=../default_host.sh
+DEFAULT_HOST!=../default-host.sh
 HOST?=DEFAULT_HOST
-HOST_ARCH!=../target-triplet-to-arch $(HOST)
+HOST_ARCH!=../target-triplet-to-arch.sh $(HOST)
 
 CFLAGS?= -O2
 ASFLAGS?= -O2
 LDFLAGS?=
 LIBS?=
 
-DEST_D?=
+DEST_D?=$(SYSROOT)
 PREFIX?=/usr/local
 EXEC_PREFIX?=$(PREFIX)
 INCLUDE_D?=$(PREFIX)/include
@@ -62,13 +62,13 @@ libk.a: $(LIBK_OBJS)
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS)
 
 .s.o:
-	$(AS) -MD $< -o $@ $(ASFLAGS)
+	$(AS) $< -o $@ $(ASFLAGS) -MD ${@:.o=.d}
 
 .c.libk.o:
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(LIBK_CFLAGS)
 
 .s.libk.o:
-	$(AS) -MD $< -o $@ $(LIBK_ASFLAGS)
+	$(AS) $< -o $@ $(LIBK_ASFLAGS) -MD ${@:.o=.d}
 
 clean:
 	rm -f $(BINARIES) *.a

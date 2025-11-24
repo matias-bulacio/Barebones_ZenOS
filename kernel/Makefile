@@ -1,15 +1,15 @@
-DEFAULT_HOST!=../default_host.sh
+DEFAULT_HOST!=../default-host.sh
 HOST?=DEFAULT_HOST
-HOST_ARCH!=../target-triplet-to-arch $(HOST)
+HOST_ARCH!=../target-triplet-to-arch.sh $(HOST)
 
-K_NAME?=zenos-$(HOST_ARCH).kernel
+K_NAME?=zenos.kernel
 
 CFLAGS?= -O2
 ASFLAGS?= -O2
 LDFLAGS?=
 LIBS?=
 
-DEST_D?=
+DEST_D?=$(SYSROOT)
 PREFIX?=/usr/local
 EXEC_PREFIX?=$(PREFIX)
 BOOT_D?=$(EXEC_PREFIX)/boot
@@ -49,7 +49,7 @@ $(K_NAME): $(OBJS) $(ARCH_D)/linker.ld
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS)
 
 .s.o:
-	$(AS) -MD $< -o $@ $(ASFLAGS)
+	$(AS) $< -o $@ $(ASFLAGS) -MD ${@:.o=.d}
 
 clean:
 	rm -f $(K_NAME)
