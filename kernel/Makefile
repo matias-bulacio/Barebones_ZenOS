@@ -2,7 +2,7 @@ DEFAULT_HOST!=../default_host.sh
 HOST?=DEFAULT_HOST
 HOST_ARCH!=../target-triplet-to-arch $(HOST)
 
-K_NAME?=ZenOS-$(HOST_ARCH).kernel
+K_NAME?=zenos-$(HOST_ARCH).kernel
 
 CFLAGS?= -O2
 ASFLAGS?= -O2
@@ -39,7 +39,7 @@ LINK_LIST = $(OBJS) $(LIBS)
 .PHONY: all clean install install-headers install-kernel
 .SUFFIXES: .o .c .s
 
-all: ZenOS.kernel
+all: $(K_NAME)
 
 $(K_NAME): $(OBJS) $(ARCH_D)/linker.ld
 	$(CC) -T $(ARCH_D)/linker.ld -o $@ $(CFLAGS) $(LDFLAGS) $(LINK_LIST)
