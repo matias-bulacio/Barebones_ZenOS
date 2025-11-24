@@ -60,7 +60,7 @@ install: install-headers install-kernel
 
 install-headers:
 	mkdir -p $(DEST_D)$(INCLUDE_D)
-	cp -R --preserve-timestamps include/. $(DEST_D)$(INCLUDE_D)/.
+	cp -R --preserve=timestamps include/. $(DEST_D)$(INCLUDE_D)/.
 
 install-kernel: $(K_NAME)
 	mkdir -p $(DEST_D)$(BOOT_D)
