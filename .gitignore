@@ -1,0 +1,6 @@
+*.iso
+iso.d
+sysroot
+*.bin
+*.o
+
