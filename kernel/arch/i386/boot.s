@@ -20,11 +20,16 @@ stack_bottom: resb 16384
 stack_top:
 
 section .text:
+extern boottime_init
 global _start
 _start:
 
 	; Setup stack
 	mov esp, stack_top
+
+	push eax
+	push ebx
+	call boottime_init
 
 	; Things to load here later:
 	; GDT

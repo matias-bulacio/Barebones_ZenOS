@@ -1,6 +1,7 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -63,6 +64,50 @@ printf(const char* restrict format, ...) {
 			if (!print(str, len))
 				return -1;
 			written += len;
+		} if (*format == 'd') {
+			format++;
+			int d = va_arg(parameters, int);
+
+			bool negative = false;
+			if (d < 0) {
+				negative = true;
+				d = -d;
+			};
+
+			const uint8_t str_len = 20;
+			char str[str_len + 1]; // uint64_t can have up to 18 decimals in its decimal represantation. +1 for sign
+			str[str_len] = '\0';
+			uint8_t digit_count = 0;
+
+			do {
+				char c = d % 10;
+				str[str_len - digit_count - 1] = '0' + c;
+				d /= 10;
+				digit_count++;
+			} while(d > 0);
+			
+			if (negative) str[str_len - digit_count++ - 1] = '-';
+
+			print(&str[str_len - digit_count], digit_count);
+
+		} if (*format == 'x') {
+			format++;
+			uint32_t d = va_arg(parameters, uint32_t);
+
+			const uint8_t str_len = 16;
+			char str[str_len + 1]; // uint64_t can have up to 18 decimals in its decimal represantation. +1 for sign
+			str[str_len] = '\0';
+			uint8_t digit_count = 0;
+
+			do {
+				char c = d % 16;
+				str[str_len - digit_count - 1] = (c < 10)?'0' + c:'A' + c - 10;
+				d /= 16;
+				digit_count++;
+			} while(d > 0);
+			
+			print(&str[str_len - digit_count], digit_count);
+
 		} else {
 			format = format_begun_at;
 			size_t len = strlen(format);
