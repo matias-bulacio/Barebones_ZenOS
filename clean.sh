@@ -8,4 +8,4 @@ done
 
 rm -rf sysroot
 rm -rf iso.d
-rm -rf zenos.iso
+rm -rf ZenOS.iso

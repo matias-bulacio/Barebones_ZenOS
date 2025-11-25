@@ -49,7 +49,7 @@ tty_putchar(char c) {
 		return;
 	}
 
-	tty_buff[tty_cursor] = vga_entry(' ', tty_color);
+	tty_buff[tty_cursor] = vga_entry(c, tty_color);
 	tty_cursor_inc();
 }
 

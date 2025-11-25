@@ -12,4 +12,4 @@ menuentry "zenos" {
 	multiboot /boot/zenos.kernel
 }
 EOF
-grub-mkrescue -o zenos.iso iso.d
+grub-mkrescue -o ZenOS.iso iso.d
