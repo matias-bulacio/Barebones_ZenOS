@@ -8,7 +8,7 @@ mkdir -p iso.d/boot/grub
 
 cp sysroot/boot/zenos.kernel iso.d/boot/zenos.kernel
 cat > iso.d/boot/grub/grub.cfg << EOF
-menuentry "zenos" {
+menuentry "ZenOS" {
 	multiboot /boot/zenos.kernel
 }
 EOF
