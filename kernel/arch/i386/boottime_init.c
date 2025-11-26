@@ -3,6 +3,7 @@
 #include <paging/physical/pages.h>
 #include <paging/physical/kernel_loc.h>
 #include <elf/elf.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,6 +36,18 @@ boottime_get_kernel_loc(multiboot_info_t *mbd) {
 		uint32_t min_k_loc = UINTPTR_MAX;
 		uint32_t max_k_loc = 0;
 		for(size_t i = 0; i < num; i++, current_sec += sec_size) {
+			uintptr_t	start_addr	= current_sec->sh_addr;
+			size_t		size		= current_sec->sh_size;
+			uintptr_t	end_addr	= start_addr + size;
+			char	   *name		= &shndx[current_sec->sh_name];
+			if (current_sec->sh_info == SHT_NOBITS ||
+				size == 0) {
+				// Skip
+				continue;
+			}
+
+			printf("Start: %x\tSize: %x\tEnd: %x\tName: %s\n", start_addr, size, end_addr, name);
+
 			if(min_k_loc > current_sec->sh_addr) min_k_loc = current_sec->sh_addr;
 			if(max_k_loc < current_sec->sh_addr + current_sec->sh_size) max_k_loc = current_sec->sh_addr + current_sec->sh_size;
 		}

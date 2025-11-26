@@ -5,7 +5,7 @@
 
 void
 k_main() {
-	tty_init();
+	//tty_init();
 	struct ph_page p;
 
 	for (p = ph_get_page(ph_last_page_id()); p.next != NULL; p = *p.next) {

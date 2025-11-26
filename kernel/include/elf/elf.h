@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define SHT_NOBITS 8
+
 typedef struct {
 	uint32_t	sh_name;
 	uint32_t	sh_type;

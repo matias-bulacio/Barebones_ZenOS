@@ -6,9 +6,9 @@
 
 #include "vga.h"
 
-size_t tty_cursor;
+size_t tty_cursor = 0;
 
-uint8_t tty_color;
+uint8_t tty_color = 0x07;
 uint16_t *tty_buff = (uint16_t*)VGA_BUFFER;
 
 #define VGA_LAST_LINE VGA_WIDTH*(VGA_HEIGHT-1)
