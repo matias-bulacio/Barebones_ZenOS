@@ -1,6 +1,6 @@
 #include <multiboot/boottime.h>
 #include <multiboot/multiboot.h>
-#include <paging/physical/pages.h>
+#include <paging/physical/regions.h>
 #include <paging/physical/kernel_loc.h>
 #include <elf/elf.h>
 #include <stdint.h>
@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 void
-boottime_register_all_ph_pages (multiboot_info_t *mbd) {
+boottime_register_all_ph_regions (multiboot_info_t *mbd) {
 	if(!((mbd->flags >> 6) & 1 )) {
 		printf("Grub mmap invalid!");
 		abort();
@@ -19,7 +19,7 @@ boottime_register_all_ph_pages (multiboot_info_t *mbd) {
 		multiboot_memory_map_t *mmap = (multiboot_memory_map_t *) (mbd->mmap_addr + i);
 
 		if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE) {
-			ph_new_page_params(mmap->addr_low, mmap->len_low);
+			ph_new_region_params(mmap->addr_low, mmap->len_low);
 		}
 	}
 }
@@ -63,7 +63,7 @@ boottime_init(multiboot_info_t *mbd, uint32_t magic) {
 		abort();
 	}
 
-	boottime_register_all_ph_pages(mbd);
+	boottime_register_all_ph_regions(mbd);
 	boottime_get_kernel_loc(mbd);
 
 

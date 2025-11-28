@@ -1,18 +1,23 @@
 #include <stdio.h>
-
 #include <kernel/tty.h>
-#include <paging/physical/pages.h>
+#include <paging/physical/regions.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 void
 k_main() {
 	//tty_init();
-	struct ph_page p;
-
-	for (p = ph_get_page(ph_last_page_id()); p.next != NULL; p = *p.next) {
-		printf("%x\t%x\n", p.base, p.len);
+	ph_region_id i = ph_head_region_id();
+	if (i == -1) {
+		printf("Invalid HEAD ID");
+		abort();
 	}
-
-	printf("K_START: %x\n", ph_kloc_start_get());
-	printf("K_END  : %x\n", ph_kloc_end_get(  ));
+	struct ph_region r = ph_get_region(i);
+	printf("All regions")
+	while(true) {
+		printf("Start: %x\tEnd: %x\n", r.base, r.base + r.len);
+		if(r.next != NULL) r = *r.next;
+		else break;
+	}
 
 }
