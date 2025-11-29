@@ -1,7 +1,6 @@
 #include <multiboot/boottime.h>
 #include <multiboot/multiboot.h>
 #include <paging/physical/regions.h>
-#include <paging/physical/kernel_loc.h>
 #include <elf/elf.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -19,40 +18,35 @@ boottime_register_all_ph_regions (multiboot_info_t *mbd) {
 		multiboot_memory_map_t *mmap = (multiboot_memory_map_t *) (mbd->mmap_addr + i);
 
 		if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE) {
-			ph_new_region_params(mmap->addr_low, mmap->len_low);
+			ph_new_region_params(mmap->addr_low, mmap->len_low, 0);
 		}
 	}
 }
 
 void
-boottime_get_kernel_loc(multiboot_info_t *mbd) {
-	if (mbd->flags & MULTIBOOT_INFO_ELF_SHDR) {
-		size_t num = mbd->u.elf_sec.num;
-		size_t sec_size = mbd->u.elf_sec.size;
-		char *shndx = (char *)mbd->u.elf_sec.shndx;
+boottime_get_kernel_elf(multiboot_info_t *mbd) {
+	if (!(mbd->flags & MULTIBOOT_INFO_ELF_SHDR)) return;
 
-		Elf32_Shdr *elf_sec_table = (Elf32_Shdr*) mbd->u.elf_sec.addr;
-		Elf32_Shdr *current_sec = elf_sec_table;
-		uint32_t min_k_loc = UINTPTR_MAX;
-		uint32_t max_k_loc = 0;
-		for(size_t i = 0; i < num; i++, current_sec += sec_size) {
-			uintptr_t	start_addr	= current_sec->sh_addr;
-			size_t		size		= current_sec->sh_size;
-			uintptr_t	end_addr	= start_addr + size;
-			char	   *name		= &shndx[current_sec->sh_name];
-			if (current_sec->sh_info == SHT_NOBITS ||
-				size == 0) {
-				// Skip
-				continue;
-			}
+	size_t num		= mbd->u.elf_sec.num;
+	size_t sec_size = mbd->u.elf_sec.size;
+	char *shndx		= (char *)mbd->u.elf_sec.shndx;
 
-			printf("Start: %x\tSize: %x\tEnd: %x\tName: %s\n", start_addr, size, end_addr, name);
+	Elf32_Shdr *elf_sec_table	= (Elf32_Shdr*) mbd->u.elf_sec.addr;
+	Elf32_Shdr *current_sec		= elf_sec_table;
 
-			if(min_k_loc > current_sec->sh_addr) min_k_loc = current_sec->sh_addr;
-			if(max_k_loc < current_sec->sh_addr + current_sec->sh_size) max_k_loc = current_sec->sh_addr + current_sec->sh_size;
+	for(size_t i = 0; i < num; i++, current_sec += sec_size) {
+		uintptr_t	start_addr	= current_sec->sh_addr;
+		size_t		size		= current_sec->sh_size;
+		uintptr_t	end_addr	= start_addr + size;
+		char	   *name		= &shndx[current_sec->sh_name];
+
+		if (current_sec->sh_info == SHT_NOBITS || size == 0) {
+			continue;
 		}
-		ph_kloc_start_set((uintptr_t)min_k_loc);
-		ph_kloc_end_set((uintptr_t)max_k_loc);
+
+		//printf("Start: %x\tSize: %x\tEnd: %x\tName: %s\n", start_addr, size, end_addr, name);
+
+		ph_new_region_params(start_addr, size, PH_REGION_KERNEL_ELF_SEGMENT);
 	}
 }
 
@@ -64,7 +58,7 @@ boottime_init(multiboot_info_t *mbd, uint32_t magic) {
 	}
 
 	boottime_register_all_ph_regions(mbd);
-	boottime_get_kernel_loc(mbd);
+	boottime_get_kernel_elf(mbd);
 
 
 }

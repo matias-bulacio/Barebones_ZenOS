@@ -7,17 +7,9 @@
 void
 k_main() {
 	//tty_init();
-	ph_region_id i = ph_head_region_id();
-	if (i == -1) {
-		printf("Invalid HEAD ID");
-		abort();
+	size_t count = ph_region_array_count();
+	for(size_t i = 0; i < count; i++) {
+		struct ph_region *r = ph_get_region(i);
+		printf("Start: %x\tEnd: %x\tFlags: %x\n", r->base, r->base + r->len, r->flags);
 	}
-	struct ph_region r = ph_get_region(i);
-	printf("All regions")
-	while(true) {
-		printf("Start: %x\tEnd: %x\n", r.base, r.base + r.len);
-		if(r.next != NULL) r = *r.next;
-		else break;
-	}
-
 }
