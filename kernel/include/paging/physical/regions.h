@@ -11,10 +11,10 @@ typedef uint32_t ph_region_flags_bitmask;
 
 #define PH_REGION_RECLAIMABLE_ACPI		(ph_region_flags_bitmask)0b00000001
 #define PH_REGION_RESERVED_BIOS			(ph_region_flags_bitmask)0b00000010
-#define PH_REGION_DEFECTIVE				(ph_region_flags_bitmask)0b10000000
 #define PH_REGION_HIBERNATION_PRESERVE	(ph_region_flags_bitmask)0b00000100
 #define PH_REGION_KERNEL_ELF_SEGMENT	(ph_region_flags_bitmask)0b00001000
 #define PH_REGION_MODULES				(ph_region_flags_bitmask)0b00010000
+#define PH_REGION_DEFECTIVE				(ph_region_flags_bitmask)0b10000000
 
 struct ph_region {
 	uintptr_t base;
@@ -42,5 +42,11 @@ ph_region_array();
 
 size_t
 ph_region_array_count();
+
+bool
+ph_is_region_contiguous(uintptr_t base, size_t size);
+
+bool
+ph_is_region_free(uintptr_t base, size_t size);
 
 #endif // _KERNEL_PAGING_PHYSICAL_REGIONS_H

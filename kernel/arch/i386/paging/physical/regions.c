@@ -72,3 +72,27 @@ size_t
 ph_region_array_count() {
 	return region_count;
 }
+
+bool
+ph_is_region_contiguous(uintptr_t base, size_t size) {
+	for (size_t i = 0; i < region_count; i++) {
+		uintptr_t c_base = ph_get_region(i)->base;
+		if (base + size <= c_base) break;
+		if (base < c_base && c_base < base + size)
+			return false;
+	}
+	return true;
+}
+
+bool
+ph_is_region_free(uintptr_t base, size_t size) {
+	if (!ph_is_region_contiguous(base, size)) return false;
+
+	size_t i = 0;
+	for(i = 0; i < region_count; i++) {
+		if(ph_get_region(i)->base > base) break;
+	}
+	if (i != 0) i--;
+
+	return ph_get_region(i)->flags == 0;
+}
