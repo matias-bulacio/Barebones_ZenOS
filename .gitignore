@@ -3,4 +3,6 @@ iso.d
 sysroot
 *.bin
 *.o
+compile_commands.json
+.cache
 

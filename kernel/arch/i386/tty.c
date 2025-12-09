@@ -14,7 +14,7 @@ uint16_t *tty_buff = (uint16_t*)VGA_BUFFER;
 #define VGA_LAST_LINE VGA_WIDTH*(VGA_HEIGHT-1)
 
 #ifndef TTY_TAB_WIDTH
-#define TTY_TAB_WIDTH 4
+#define TTY_TAB_WIDTH 8
 #endif
 
 bool
