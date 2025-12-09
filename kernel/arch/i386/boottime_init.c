@@ -83,6 +83,15 @@ boottime_get_video_info (multiboot_info_t *mbd) {
 	if(mbd->flags & MULTIBOOT_INFO_FRAMEBUFFER_INFO) {
 		ph_new_region_params(mbd->framebuffer_addr, mbd->framebuffer_pitch*mbd->framebuffer_height, PH_REGION_VIDEO);
 	}
+
+	if (mbd->flags & MULTIBOOT_INFO_VBE_INFO) {
+		if (mbd->vbe_control_info)
+			ph_new_region_params((uintptr_t)mbd->vbe_control_info, 512, PH_REGION_VIDEO); // TODO: import a VBE header and replace the magic values
+																						  // These values are taken from VBE 2.0 spec
+
+		if (mbd->vbe_mode_info)
+			ph_new_region_params((uintptr_t)mbd->vbe_mode_info, 256, PH_REGION_VIDEO);
+	}
 }
 
 void
